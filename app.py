@@ -375,7 +375,72 @@ if page == "Dashboard":
     
     docker = init_docker()
     if not docker:
-        st.info(DOCKER_UNAVAILABLE_MSG)
+        # Cloud mode — show rich dashboard without Docker
+        st.markdown("""
+        <div style='background:linear-gradient(135deg,#27ae60,#1e8449);padding:20px;border-radius:12px;margin-bottom:20px;'>
+            <h2 style='color:white;margin:0;'>🌐 Running on Streamlit Cloud</h2>
+            <p style='color:#d5f5e3;margin:8px 0 0 0;'>Docker container features require a local installation. All AI & API features are fully active below.</p>
+        </div>
+        """, unsafe_allow_html=True)
+
+        # Feature cards
+        col1, col2, col3, col4 = st.columns(4)
+        with col1:
+            st.markdown("""<div style='background:#fff;padding:20px;border-radius:10px;border:1px solid #d0d7de;text-align:center;'>
+            <h2 style='color:#27ae60;'>🤖</h2><h4>AI Agent</h4><p style='color:#666;font-size:13px;'>Natural language Docker commands via Groq AI</p></div>""", unsafe_allow_html=True)
+        with col2:
+            st.markdown("""<div style='background:#fff;padding:20px;border-radius:10px;border:1px solid #d0d7de;text-align:center;'>
+            <h2 style='color:#27ae60;'>🔗</h2><h4>GitHub API</h4><p style='color:#666;font-size:13px;'>Live GitHub status, events & rate limits</p></div>""", unsafe_allow_html=True)
+        with col3:
+            st.markdown("""<div style='background:#fff;padding:20px;border-radius:10px;border:1px solid #d0d7de;text-align:center;'>
+            <h2 style='color:#27ae60;'>📊</h2><h4>Analytics</h4><p style='color:#666;font-size:13px;'>Charts, graphs and container insights</p></div>""", unsafe_allow_html=True)
+        with col4:
+            st.markdown("""<div style='background:#fff;padding:20px;border-radius:10px;border:1px solid #d0d7de;text-align:center;'>
+            <h2 style='color:#27ae60;'>📋</h2><h4>Logs</h4><p style='color:#666;font-size:13px;'>Prompt logs, audit trail & history</p></div>""", unsafe_allow_html=True)
+
+        st.markdown("---")
+
+        # GitHub status live
+        st.markdown("### 🔗 Live GitHub Status")
+        github = st.session_state.github
+        col1, col2 = st.columns(2)
+        with col1:
+            status = github.get_status()
+            if status.get("success"):
+                indicator = status.get("indicator", "none")
+                description = status.get("description", "Unknown")
+                if indicator == "none":
+                    st.success(f"✅ GitHub Status: {description}")
+                elif indicator == "minor":
+                    st.warning(f"⚠️ GitHub Status: {description}")
+                else:
+                    st.error(f"🔴 GitHub Status: {description}")
+            else:
+                st.warning("Could not fetch GitHub status")
+        with col2:
+            rate = github.get_rate_limit()
+            if rate.get("success"):
+                st.metric("GitHub API Remaining", rate.get("remaining", 0))
+            
+        st.markdown("---")
+
+        # AI Agent quick try
+        st.markdown("### 🤖 Try the AI Agent")
+        st.info("👈 Click **AI Agent** in the sidebar to control Docker with natural language commands like:\n\n`show running containers` • `restart nginx` • `check mysql health`")
+
+        st.markdown("---")
+        st.markdown("### ℹ️ About This Dashboard")
+        st.markdown("""
+        | Feature | Status |
+        |---------|--------|
+        | 🤖 AI Agent (Groq LLM) | ✅ Available |
+        | 🔗 GitHub API Integration | ✅ Available |
+        | 📋 Logs & Audit Trail | ✅ Available |
+        | 📊 Analytics Charts | ✅ Available |
+        | ⚙️ Settings & Config | ✅ Available |
+        | 📦 Container Management | 🖥️ Local only |
+        | 🏠 Dashboard KPIs | 🖥️ Local only |
+        """)
     else:
         # Get system info
         system_info = docker.get_system_info()
