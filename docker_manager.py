@@ -5,17 +5,25 @@ import time
 
 class DockerManager:
     def __init__(self):
+        import platform
         try:
-            # Try to connect using default method first
+            # Try default (works on Linux/Mac cloud and local)
             self.client = docker.from_env()
             self.client.ping()
         except DockerException:
-            # If that fails, try Windows named pipe
-            try:
-                self.client = docker.DockerClient(base_url='npipe:////./pipe/docker_engine')
-                self.client.ping()
-            except DockerException as e:
-                raise Exception(f"Failed to connect to Docker daemon: {str(e)}")
+            # Only try Windows named pipe if actually on Windows
+            if platform.system() == "Windows":
+                try:
+                    self.client = docker.DockerClient(base_url='npipe:////./pipe/docker_engine')
+                    self.client.ping()
+                except DockerException as e:
+                    raise Exception(f"Failed to connect to Docker daemon: {str(e)}")
+            else:
+                raise Exception(
+                    "Docker is not available in this environment. "
+                    "Docker features require a local Docker installation. "
+                    "Please use the AI Agent, Logs, Analytics, GitHub API, and Settings pages."
+                )
     
     def list_containers(self, status_filter: Optional[str] = None) -> List[Dict]:
         """

@@ -337,8 +337,15 @@ def init_docker():
     try:
         return DockerManager()
     except Exception as e:
-        st.error(f"Failed to connect to Docker: {str(e)}")
         return None
+
+DOCKER_UNAVAILABLE_MSG = """
+🌐 **Running on Streamlit Cloud — Docker not available**
+
+Docker features (Dashboard KPIs, Container Management) require a local Docker installation.
+
+**Fully working pages:** 🤖 AI Agent &nbsp;|&nbsp; 📋 Logs &nbsp;|&nbsp; 📊 Analytics &nbsp;|&nbsp; 🔗 GitHub API &nbsp;|&nbsp; ⚙️ Settings
+"""
 
 # Sidebar navigation
 st.sidebar.title("🐳 Docker NL Dashboard")
@@ -368,7 +375,7 @@ if page == "Dashboard":
     
     docker = init_docker()
     if not docker:
-        st.error("Cannot connect to Docker daemon. Please ensure Docker is running.")
+        st.info(DOCKER_UNAVAILABLE_MSG)
     else:
         # Get system info
         system_info = docker.get_system_info()
@@ -422,7 +429,7 @@ elif page == "Containers":
     
     docker = init_docker()
     if not docker:
-        st.error("Cannot connect to Docker daemon.")
+        st.info(DOCKER_UNAVAILABLE_MSG)
     else:
         # Filter options
         col1, col2, col3 = st.columns([2, 2, 1])
@@ -622,7 +629,14 @@ elif page == "Analytics":
     db = st.session_state.db
     
     if not docker:
-        st.error("Cannot connect to Docker daemon.")
+        st.info(DOCKER_UNAVAILABLE_MSG)
+        st.markdown("### 📋 Container History")
+        history = db.get_container_history(limit=200)
+        if history:
+            df_history = pd.DataFrame(history)
+            st.dataframe(df_history, use_container_width=True)
+        else:
+            st.info("No container history found.")
     else:
         containers = docker.list_containers(status_filter=None)
         
