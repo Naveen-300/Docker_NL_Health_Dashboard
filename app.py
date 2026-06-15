@@ -7,6 +7,10 @@ import json
 import time
 import os
 import logging
+from dotenv import load_dotenv
+
+# Load .env file automatically
+load_dotenv()
 
 # Suppress noisy ScriptRunContext warnings from Streamlit internals
 logging.getLogger("streamlit").setLevel(logging.ERROR)
@@ -41,6 +45,11 @@ st.markdown("""
         padding-top: 1rem !important;
         padding-bottom: 1rem !important;
         max-width: 95% !important;
+    }
+    
+    /* Force light mode override */
+    :root {
+        color-scheme: light !important;
     }
     
     /* Main background - Clean white/light gray */

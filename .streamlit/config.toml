@@ -12,3 +12,8 @@ port = 8501
 
 [browser]
 gatherUsageStats = false
+serverAddress = "localhost"
+
+[client]
+toolbarMode = "minimal"
+showSidebarNavigation = true

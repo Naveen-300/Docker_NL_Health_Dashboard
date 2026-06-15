@@ -1,11 +1,16 @@
 # 🐳 AI Docker Natural Language Health Dashboard
 
+[![Open App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://dockernlhealthdashboard-yfpgtcswzctdc7zumucp2e.streamlit.app)
+
+> **Local URL:** http://localhost:8501 (requires Docker Desktop running)  
+> **Public URL:** https://dockernlhealthdashboard-yfpgtcswzctdc7zumucp2e.streamlit.app
+
 A production-ready full-stack application that allows users to manage Docker containers using natural language commands. Built with AI-powered translation, ReAct-style agent loops, and comprehensive monitoring capabilities.
 
 ## 🌟 Features
 
 - **Natural Language Interface**: Control Docker with plain English commands
-- **AI-Powered Translation**: Ollama LLM (llama3) translates commands to Docker operations
+- **AI-Powered Translation**: Groq LLM (llama-3.3-70b) translates commands to Docker operations
 - **ReAct Agent Loop**: Step-by-step reasoning visible in the UI
 - **Real-time Monitoring**: Container health, resource usage, and status tracking
 - **Data Visualization**: Interactive charts and graphs with Plotly
