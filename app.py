@@ -1,4 +1,13 @@
 import streamlit as st
+
+# Page configuration - MUST be the very first Streamlit command
+st.set_page_config(
+    page_title="AI Docker NL Health Dashboard",
+    page_icon="🐳",
+    layout="wide",
+    initial_sidebar_state="expanded"
+)
+
 import pandas as pd
 import plotly.graph_objects as go
 import plotly.express as px
@@ -16,26 +25,21 @@ load_dotenv()
 logging.getLogger("streamlit").setLevel(logging.ERROR)
 logging.getLogger("streamlit.runtime.scriptrunner").setLevel(logging.ERROR)
 
-# Load Groq API key from Streamlit Cloud secrets if available
-try:
-    if hasattr(st, "secrets") and "GROQ_API_KEY" in st.secrets:
-        os.environ["GROQ_API_KEY"] = st.secrets["GROQ_API_KEY"]
-except Exception:
-    pass
+# Load Groq API key from Streamlit Cloud secrets if available (only check if file exists to prevent warning)
+secrets_path = os.path.join(".streamlit", "secrets.toml")
+user_secrets_path = os.path.expanduser("~/.streamlit/secrets.toml")
+if os.path.exists(secrets_path) or os.path.exists(user_secrets_path):
+    try:
+        if "GROQ_API_KEY" in st.secrets:
+            os.environ["GROQ_API_KEY"] = st.secrets["GROQ_API_KEY"]
+    except Exception:
+        pass
 
 from agent import ReactAgent
 from docker_manager import DockerManager
 from database import Database
 from github_api import GitHubAPI
 from llm import LLMManager
-
-# Page configuration
-st.set_page_config(
-    page_title="AI Docker NL Health Dashboard",
-    page_icon="🐳",
-    layout="wide",
-    initial_sidebar_state="expanded"
-)
 
 # Custom CSS - Clean Light Theme with Dark Navy Cards
 st.markdown("""

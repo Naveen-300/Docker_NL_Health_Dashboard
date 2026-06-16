@@ -5,6 +5,23 @@
 > **Local URL:** http://localhost:8501 (requires Docker Desktop running)  
 > **Public URL:** https://dockernlhealthdashboard-yfpgtcswzctdc7zumucp2e.streamlit.app
 
+## ▶️ Run Locally
+
+**Step 1 — Open terminal and run:**
+```cmd
+cd "C:\Users\navee\OneDrive\文档\N Pro (2)\N Pro\docker-nl-dashboard"
+streamlit run app.py
+```
+
+**Step 2 — Open browser at:**
+```
+http://localhost:8501
+```
+
+**Step 3 — Turn on Docker Desktop, then refresh the page to connect containers.**
+
+> 💡 Or just double-click `start_dashboard.bat` — it does everything automatically.
+
 A production-ready full-stack application that allows users to manage Docker containers using natural language commands. Built with AI-powered translation, ReAct-style agent loops, and comprehensive monitoring capabilities.
 
 ## 🌟 Features
